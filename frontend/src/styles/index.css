@@ -1,0 +1,175 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Orbitron", sans-serif;
+}
+
+body {
+  background: radial-gradient(circle at top, #020024, #090979, #000000);
+  color: #fff;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+#root {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+
+/* DASHBOARD */
+.dashboard {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* HEADER */
+.header {
+  text-align: center;
+  padding: 20px;
+  border-bottom: 1px solid cyan;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  color: cyan;
+}
+
+.header span {
+  color: #aaa;
+}
+
+/* STATUS BAR */
+.status-bar {
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+  background: rgba(0, 255, 255, 0.05);
+  border-bottom: 1px solid cyan;
+  color: #fff;
+}
+
+.status-bar div {
+  color: #fff;
+  visibility: visible;
+}
+
+/* MAIN GRID */
+.main-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 20px;
+  padding: 20px;
+}
+
+/* PANELS */
+.panel {
+  background: rgba(0, 0, 0, 0.7);
+  border: 1px solid cyan;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 0 20px rgba(0,255,255,0.3);
+  display: flex;
+  flex-direction: column;
+}
+
+.panel h2 {
+  color: cyan;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+/* CAMERA */
+.camera-box {
+  position: relative;
+  flex: 1;
+  border: 1px dashed cyan;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.camera-box video {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+}
+
+.overlay-text {
+  position: absolute;
+  color: #aaa;
+}
+
+/* GESTURE */
+.gesture-box {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.gesture-text {
+  font-size: 2rem;
+  color: lime;
+  text-shadow: 0 0 15px lime;
+}
+
+/* CONTROL PANEL */
+.mode-buttons {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.mode-buttons button {
+  padding: 12px;
+  background: transparent;
+  border: 1px solid cyan;
+  color: cyan;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.mode-buttons button:hover {
+  background: cyan;
+  color: black;
+}
+
+.mode-buttons .active {
+  background: cyan;
+  color: black;
+}
+
+/* LOG */
+.system-log ul {
+  list-style: none;
+  margin-top: 10px;
+}
+
+.system-log li {
+  padding: 5px 0;
+  color: #aaa;
+}
+
+/* FOOTER */
+.footer {
+  text-align: center;
+  padding: 10px;
+  border-top: 1px solid cyan;
+  background: rgba(0,0,0,0.6);
+  font-size: 0.9rem;
+  color: #aaa;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .main-grid {
+    grid-template-columns: 1fr;
+  }
+}

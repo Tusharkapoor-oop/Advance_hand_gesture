@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AuraControl AI – Universal Contactless Interface</title>
+
+    <!-- Google Font: Orbitron for that tech look -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Orbitron", sans-serif;
+        height: 100vh;
+        background: radial-gradient(circle at top, #020024, #090979, #000000);
+        overflow: hidden;
+        color: #fff;
+      }
+
+      #root {
+        height: 100vh;
+        width: 100vw;
+        color: #fff;
+      }
+
+      /* Loading Screen – visible until React mounts */
+      .loading-screen {
+        position: fixed;
+        inset: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #000000, #020024, #090979);
+        color: cyan;
+        font-size: 2rem;
+        letter-spacing: 2px;
+        z-index: 9999;
+      }
+
+      .loading-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        background: linear-gradient(90deg, cyan, #00ffcc, #00aaff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: glow 2s infinite alternate;
+      }
+
+      .loading-subtitle {
+        margin-top: 10px;
+        font-size: 1rem;
+        color: #aaa;
+      }
+
+      .loader {
+        margin-top: 30px;
+        width: 60px;
+        height: 60px;
+        border: 4px solid rgba(0,255,255,0.2);
+        border-top: 4px solid cyan;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      @keyframes glow {
+        from { text-shadow: 0 0 10px cyan; }
+        to { text-shadow: 0 0 25px #00ffff; }
+      }
+
+      /* Animated cyber grid background */
+      .grid-bg {
+        position: fixed;
+        inset: 0;
+        background-image:
+          linear-gradient(rgba(0,255,255,0.05) 1px, transparent 1px),
+          linear-gradient(90deg, rgba(0,255,255,0.05) 1px, transparent 1px);
+        background-size: 40px 40px;
+        animation: moveGrid 20s linear infinite;
+        pointer-events: none;
+      }
+
+      @keyframes moveGrid {
+        from { background-position: 0 0; }
+        to { background-position: 400px 400px; }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Animated background layer -->
+    <div class="grid-bg"></div>
+
+    <!-- React root – initially contains the loading screen, which will be replaced by React once the app mounts -->
+    <div id="root">
+      <div class="loading-screen">
+        <div class="loading-title">AuraControl AI</div>
+        <div class="loading-subtitle">Universal Contactless Interface</div>
+        <div class="loader"></div>
+      </div>
+    </div>
+
+    <!-- React entry script (your compiled main.jsx) -->
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
