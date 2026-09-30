@@ -1,125 +1,73 @@
-# AuraControl
+# AuraControl — Frontend
 
-> Real-time contactless computer interaction using hand gestures and contextual classification.
+**The control surface for [AuraControl](https://github.com/Tusharkapoor-oop/idk): live hand-landmark streaming, gesture telemetry, and mode switching.**
 
-[Repository](https://github.com/Tusharkapoor-oop/Advance_hand_gesture)
-
----
-
-## ◈ Overview
-
-AuraControl is a universal contactless interface that translates hand gestures into computer actions via a real-time computer vision pipeline. The system tracks 21 hand landmarks, classifies specific gesture patterns, and maps them to context-dependent actions (such as media control, virtual canvas drawing, or presentation traversal).
-
-Instead of relying on heavy machine learning models that introduce latency, AuraControl utilizes lightweight mathematical geometry and state machines, running comfortably at 30+ FPS on consumer hardware.
+> This repository is the **frontend only** (React + Vite). The vision/backend engine lives in
+> [`Tusharkapoor-oop/idk`](https://github.com/Tusharkapoor-oop/idk) (rename to `auracontrol-backend` planned).
 
 ---
 
-## ◈ Architecture
+## What you see
 
-AuraControl decouples the heavy computer vision processing from the front-end user interface using a WebSocket architecture.
+- **Landmark stream** — 21 MediaPipe hand landmarks rendered from normalised coordinates pushed by the vision engine.
+- **Dashboard** — connection status, current gesture, measured round-trip latency, measured stream FPS. When the engine is offline the panel says *disconnected*; it never renders placeholder numbers.
+- **Mode selector** — Presentation / Media / Canvas / Utility modes sent with each frame so the backend's context engine can resolve the right OS action.
+- **Event log** — last 8 connection/telemetry transitions with timestamps.
 
-```mermaid
-flowchart TD
-    subgraph Client [Front-End UI]
-        A[React / Vite Dashboard]
-        B[Gesture Overlay HUD]
-        C[WebSocket Client]
-    end
-
-    subgraph Core [Python Vision Engine]
-        D[OpenCV Frame Capture]
-        E[MediaPipe Landmark Detection]
-        F[Gesture Classification State Machine]
-        G[Action Dispatcher / OS Controller]
-        H[WebSocket Server]
-    end
-
-    A <-->|Connection / Status| C
-    B <-->|Render Canvas| C
-    C <-->|Real-time Coordinate Stream| H
-    D --> E --> F
-    F -->|Local Execution| G
-    F -->|Telemetry| H
+```
+Home.jsx ── connects ──▶ services/socket.js ── WebSocket ──▶ FastAPI backend (:8000)
+   │                          │
+   ├─ Dashboard (props)       └─ default: ws://localhost:8000/ws/gesture
+   ├─ GestureTrail                  override: VITE_WS_URL
+   ├─ HUD / ModeSelector
+   └─ log (8 entries)
 ```
 
 ---
 
-## ◈ Key Engineering Decisions
+## Requirements
 
-### 1. WebSockets vs. HTTP Polling
-**Problem:** Polling a REST API for hand coordinates creates unacceptable UI stutter and latency in an interface designed for smooth physics interactions.
-**Solution:** A persistent WebSocket connection was established between the Python core and the React front-end, allowing bi-directional coordinate streaming at 60Hz.
+- Node 18+
+- A running AuraControl backend (see upstream repo quick start)
 
-### 2. Algorithmic Geometry vs. Deep Learning
-**Problem:** Training a neural network to recognize gestures requires high compute and introduces prediction latency.
-**Solution:** The system calculates euclidean distances and angles between specific MediaPipe nodes (e.g., thumb tip to index tip) to build deterministic state machines (e.g., "Pinch", "Swipe", "Open Hand"). This guarantees sub-millisecond classification latency.
+## Run
 
----
-
-## ◈ Features
-
-- **Virtual Canvas**: Draw in the air with multi-finger physics tracking.
-- **Media Controller**: Swipe gestures map natively to OS media commands.
-- **Air Signature Authentication**: Biometric prototype that matches a user's unique mid-air signature geometry.
-- **Context Engine**: Automatically switches behavior based on the active application.
-
----
-
-## ◈ Tech Stack
-
-**Core Engine**
-- `Python 3.10+`
-- `OpenCV` (Frame processing)
-- `MediaPipe` (Hand tracking models)
-- `PyAutoGUI / pynput` (OS level execution)
-
-**API & Interface**
-- `FastAPI` (WebSocket mounting)
-- `React + Vite`
-- `TailwindCSS`
-
----
-
-## ◈ Getting Started
-
-### Requirements
-- Python 3.10+
-- Node.js 18+
-- Webcam access
-
-### Installation
-
-1. **Clone the repository**
 ```bash
-git clone https://github.com/Tusharkapoor-oop/Advance_hand_gesture.git
-cd Advance_hand_gesture
-```
-
-2. **Start the Python Core**
-```bash
-cd backend
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-pip install -r app/requirements.txt
-python app/main.py
-```
-
-3. **Start the UI**
-```bash
-cd frontend
 npm install
-npm run dev
+npm run dev          # http://localhost:5173
+```
+
+Connect to a backend:
+
+```bash
+# .env.local
+VITE_WS_URL=ws://localhost:8000/ws/gesture
+```
+
+> **Backend contract note:** the current backend exposes `/ws`. Set `VITE_WS_URL` to the route
+> your backend actually serves (`/ws` or `/ws/gesture`) — the two repos are being unified on `/ws`.
+
+## Build
+
+```bash
+npm run build        # vite build → dist/
+npm run preview      # serve the production build locally
 ```
 
 ---
 
-## ◈ Limitations & Future Work
+## Architecture notes
 
-- **Lighting Dependency:** Standard RGB camera tracking struggles in extremely low-light conditions. Future work includes IR camera support.
-- **Multi-hand Overlap:** The heuristic engine occasionally fails when hands fully overlap. Implementing an LSTM tracker is planned to maintain state continuity during occlusion.
+- **State:** local React state only — no store needed for a single-page telemetry surface.
+- **Telemetry math:** latency is the time between consecutive frames (`receivedAt - lastSeen`); FPS is arrivals in a rolling 1-second window. Both reset to `null` on disconnect (not `0`, which would look like real data).
+- **Socket lifecycle:** every state transition (`open`, `lost`, `error`, `closed`) is reported to the UI so what's displayed is what's true.
 
----
+## Known limitations
 
-## ◈ License
+- Single-page app; no routing (deliberate).
+- `recharts` appears in `package.json` but is not yet used — candidate for removal.
+- No automated tests yet — planned: a socket-mock test for `Home.jsx` telemetry math.
 
-Distributed under the MIT License.
+## License
+
+No license file yet — MIT intended (to be added by the repository owner).
