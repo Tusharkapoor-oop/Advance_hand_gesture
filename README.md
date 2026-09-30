@@ -1,9 +1,9 @@
 # AuraControl — Frontend
 
-**The control surface for [AuraControl](https://github.com/Tusharkapoor-oop/idk): live hand-landmark streaming, gesture telemetry, and mode switching.**
+**The control surface for [AuraControl](https://github.com/Tusharkapoor-oop/auracontrol-backend): live hand-landmark streaming, gesture telemetry, and mode switching.**
 
 > This repository is the **frontend only** (React + Vite). The vision/backend engine lives in
-> [`Tusharkapoor-oop/idk`](https://github.com/Tusharkapoor-oop/idk) (rename to `auracontrol-backend` planned).
+> [`Tusharkapoor-oop/auracontrol-backend`](https://github.com/Tusharkapoor-oop/auracontrol-backend).
 
 ---
 
